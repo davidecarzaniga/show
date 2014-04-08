@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Show</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script>
+      var settings = {
+        "title": "",
+        "width": "1440",
+        "bg": "url(bg.jpg) top repeat-x"
+      };
+      
+      var pages = [
+        {
+          "img": "home_draft.jpg",
+          "title": "home_draft",
+          "height": "1621",
+          "tooltips": [
+            {
+              "top": "13%",
+              "left": "14%",
+              "title": "solo un test",
+              "text": "Questo è un testo abbastanza lungo, giusto per testare come viene fuori il mio bel popover."
+            }
+            
+          ]
+        },
+        {
+          "img": "service_draft.jpg",
+          "title": "service_draft",
+          "height": "2025"
+        },
+        {
+          "img": "single_service_draft.jpg",
+          "title": "single_service_draft",
+          "height": "2675"
+        }
+      ];
+      
+    </script>
+    
+    <style>
+      body{
+        margin:0;
+        height: 0px;
+        text-align:center;
+      }
+      
+      #mainlink{
+        display:block;
+        width:80%;
+        top: 0;
+        left:20%;
+        position: absolute;
+      }
+      
+      #mainlink .inner{
+        position: absolute;
+        top: 0;
+        left: 50%;
+      }
+      
+      #mainmenu{
+        height: 100%;
+        width: 20%;
+        top: 0;
+        left: 0;
+        background: #000000;
+        color: #ffffff;
+        box-shadow: 3px 0px 5px #333333;
+        padding: 20px;
+        position: fixed;
+        z-index: 2;
+      }
+      
+      .logo{
+        margin-bottom: 50px;
+        max-width: 411px;
+      }
+      
+      .sidelink{
+        display: block;
+        padding: 10px 20px;
+        margin-left: -20px;
+        margin-right: -20px;
+        border-bottom: 1px solid #666;
+        color: white;
+        text-align: left;
+      }
+      
+      .sidelink:hover{
+        background: #333;
+        color: white;
+      }
+      
+      .sidelink.active{
+        color: #00adef;
+      }
+      
+      .tooltip_link{
+        display: block;
+        font-size: 23px;
+        color: black;
+        position: absolute;
+        text-shadow: 0px 0px 10px #ffffff;
+      }
+      
+      label{
+        text-align: left;
+        display: block;
+        font-weight: normal;
+      }
+      
+      .link_container{
+        margin-bottom: 30px;
+      }
+      
+      .btn-toggle-panel{
+        background: #000000;
+        color: #ffffff;
+        border: 0;
+        position: absolute;
+        top: 50%;
+        right: -30px;
+        padding: 20px 10px;
+        margin-top: -31px;
+        box-shadow: 0 0 5px #333333;
+        outline: none;
+      }
+      
+      .btn-toggle-panel:hover,
+      .btn-toggle-panel:active,
+      .btn-toggle-panel:focus{
+        background: #000000;
+        color: #cccccc;
+        border: 0;
+        outline: none;
+      }
+      
+    </style>
+    
+  </head>
+  <body>
+    <div id="mainmenu" class="open">
+      <img src="logo_boxnero_RGB_mr.jpg" width="100%" class="logo" />
+      
+      <div class="link_container"></div>
+      
+      <div class="toggle-comments clearfix">
+        <label>Visualizza commenti:</label>
+        <div class="btn-group pull-left">
+          <button type="button" class="btn btn-default btn-primary btn-comments-on">On</button>
+          <button type="button" class="btn btn-default btn-comments-off">Off</button>
+        </div>
+      </div>
+      
+      <button type="button" class="btn btn-default btn-toggle-panel"><i class="glyphicon glyphicon-chevron-left"></i></button>
+      
+    </div>
+
+    <div id="mainlink">
+      <div class="inner"></div>
+    </div>
+    
+    <div style="clear:both;"></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script>
+      
+      var pagetitle = $("#mainlink");
+      var pagebody = $("body");
+      var mainlink = $("#mainlink");
+      
+      var active_page = 0;
+      
+      var show_comments = true;
+      
+      var w_w = $(window).width();
+      var w_h = $(window).height();
+      
+      function loadPage(n){
+        if( typeof pages[n] != "undefined" ){
+          active_page = n;
+          mypage = pages[n];
+          mainlink.css("height", mypage.height + "px");
+          mainlink.css("background", "url(" + mypage.img + ") center top no-repeat");
+          pagebody.css("height", mypage.height + "px");
+          //pagetitle.html( mypage.title + " - " + pagetitle );
+          
+          $(".tooltip_link").remove();
+          
+          if( show_comments && typeof mypage.tooltips != "undefined" ){
+            $.each(mypage.tooltips, function( index, value ) {
+              mainlink.find(".inner").append("<a class=\"tooltip_link\" href=\"javascript:void(0);\" data-toggle=\"popover\" data-title=\"" + value.title + "\" data-content=\"" + value.text + "\" title=\"" + value.title + "\" style=\"top:" + value.top + "; left:" + value.left + "\"><i class=\"glyphicon glyphicon-info-sign\"></i></a>");
+            });
+          }
+          
+          onResize();
+          
+        }else{
+          alert("La pagina non esiste");
+        }
+      }
+      
+      function onResize(){
+        pagebody.css("height", w_h + "px");
+        pagebody.css("background", settings.bg);
+        pagebody.find(".inner").css("height", w_h + "px");
+        pagebody.find(".inner").css("width", settings.width + "px");
+        pagebody.find(".inner").css("margin-left", "-" + Math.floor(settings.width / 2) + "px");
+      }
+      
+      $(document).ready(function(){
+        //onResize(); //faccio già dentro loadPage
+        
+        $(window).on("resize", function(){
+          onResize();  
+        });
+        
+        $.each(pages, function( index, value ) {
+          $('#mainmenu .link_container').append("<a class=\"sidelink\" href=\"#" + index + "\" onclick=\"loadPage(" + index + ")\">" + value.title + "</a>");
+        });
+        
+        $('.btn-comments-off').on("click", function(){
+          $('.btn-comments-on').removeClass("btn-primary");
+          $(this).addClass("btn-primary");
+          show_comments = false;
+          loadPage(active_page);
+        });
+        
+        $('.btn-comments-on').on("click", function(){
+          $('.btn-comments-off').removeClass("btn-primary");
+          $(this).addClass("btn-primary");
+          show_comments = true;
+          loadPage(active_page);
+        });
+        
+        $('body').popover({
+          selector: '[data-toggle=popover]'
+        });
+        
+        $('.btn-toggle-panel').on("click", function(){
+          if( $('#mainmenu').hasClass('open') ){
+            //è aperto, chiudo
+            $(this).find("i").removeClass("glyphicon-chevron-left").addClass("glyphicon-chevron-right");
+            $('#mainmenu').stop(true, true).animate({
+              left: "-20%" 
+            }, 200);
+            mainlink.stop(true, true).animate({
+              width: "100%",
+              left: "0%" 
+            }, 200);
+            $('#mainmenu').removeClass('open');
+          }else{
+            //è chiuso, apro
+            $(this).find("i").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-left");
+            $('#mainmenu').stop(true, true).animate({
+              left: "0%" 
+            }, 200);
+            mainlink.stop(true, true).animate({
+              width: "80%",
+              left: "20%"
+            }, 200);
+            $('#mainmenu').addClass('open');
+          }
+        });
+        
+        urlpage = document.location.hash.substring(1);
+        
+        if( typeof urlpage != "undefined" && urlpage > 0){
+          loadPage( urlpage );
+        }else{
+          loadPage(0);
+        }
+      });
+    </script>
+  </body>
+</html>
